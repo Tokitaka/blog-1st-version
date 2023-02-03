@@ -4,5 +4,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.mtcoding.blog.model.UserRepository">
+<insert id="insert">
+insert into user_tb(username, password, email, created_at) values(#{username}, #{password}, #{email},now()) 
+</insert>
 
+<select id="findByUsernameAndPassword" resultType="shop.mtcoding.blog.model.User">
+select * from user_tb where username = #{username} and password = #{password}
+</select>
 </mapper>
+

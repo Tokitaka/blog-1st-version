@@ -4,5 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.mtcoding.blog.model.BoardRepository">
-
+<insert id="insert">
+insert into board_tb(title, content, user_id, created_at) values(#{title}, #{content}, #{userId}, now())  
+</insert>
 </mapper>
