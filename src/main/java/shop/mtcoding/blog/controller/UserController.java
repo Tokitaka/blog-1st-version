@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
+import shop.mtcoding.blog.service.UserService;
 import shop.mtcoding.blog.util.Script;
 
 @Controller
@@ -21,6 +24,11 @@ public class UserController {
     @Autowired
     HttpSession session;
 
+    @Autowired
+    private UserService userService;
+    // 역할 분담 : controller 는 Service를 거쳐서 Repository에 접근
+    // 하므로 의존성 주입.
+
     @GetMapping("/joinForm")
     public String joinForm() {
         return "user/joinForm";
@@ -31,14 +39,23 @@ public class UserController {
         return "user/loginForm";
     }
 
-    @ResponseBody
     @PostMapping("/join")
-    public String join(String username, String password, String email) {
-        int result = userRepository.insert(username, password, email);
-        if (result != 1) {
-            return Script.back("회원가입실패");
+    public String join(JoinReqDto joinReqDto) {
+
+        if (joinReqDto.getUsername() == null || joinReqDto.getUsername().isEmpty()) {
+            throw new CustomException("username을 작성해주세요");
         }
-        return Script.href("/loginForm");
+        if (joinReqDto.getPassword() == null || joinReqDto.getPassword().isEmpty()) {
+            throw new CustomException("password을 작성해주세요");
+        }
+        if (joinReqDto.getEmail() == null || joinReqDto.getEmail().isEmpty()) {
+            throw new CustomException("email을 작성해주세요");
+        }
+        int result = userService.회원가입(joinReqDto);
+        if (result != 1) {
+            throw new CustomException("회원가입 실패");
+        }
+        return "redirect:/loginForm";
     }
 
     @ResponseBody
