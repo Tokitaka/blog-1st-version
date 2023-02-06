@@ -52,7 +52,7 @@ public class UserController {
             throw new CustomException("email을 작성해주세요");
         }
 
-        int result = userService.회원가입(joinReqDto);
+        userService.회원가입(joinReqDto);
 
         return "redirect:/loginForm";
     }
