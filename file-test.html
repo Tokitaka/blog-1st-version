@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/hello" enctype="multipart/form-data" method="post"> <!-- x-www-form, file -->
+        <input type="text" name="title" />
+        <input type="file" name="thumnail" />
+        <button type="submit">파일전송</button>
+    </form>
+
+    <!-- <script>
+        $.ajax({
+            data: 파일,
+            contentType: MimeType
+        })
+    </script> -->
+</body>
+
+</html>

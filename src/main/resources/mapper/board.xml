@@ -4,6 +4,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="shop.mtcoding.blog.model.BoardRepository">
+    <!-- Mybatis는 내부 클래스는 $로 찾는다 -->
+    <select id="findAllWithUser" resultType="shop.mtcoding.blog.dto.board.BoardResp$BoardMainRespDto">
+        select bt.id, bt.title, ut.username
+        from board_tb bt
+        inner join user_tb ut 
+        on bt.user_id = ut.id
+    </select>
 
     <select id="findAll" resultType="shop.mtcoding.blog.model.Board">
         select * from board_tb
