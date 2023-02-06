@@ -69,9 +69,8 @@ public class UserController {
             throw new CustomException("password을 작성해주세요");
         }
         User principal = userService.로그인(loginReqDto);
-        if (principal == null) {
-            throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다");
-        }
+
+        // 검증 : Service에서 null return 한 후, 책임 + 검증
         session.setAttribute("principal", principal);
         return "redirect:/";
     }
