@@ -45,7 +45,14 @@ public class BoardControllerTest {
     @Test
     public void save_test() throws Exception {
         // given
-        String requestBody = "title=제목1&content=내용1";
+        // -> 글자수검증(DataException : value too long)-> 컨트롤러 책임, '글자수(3바이트 || 2바이트)' or
+        // '바이트'도 각각 검증해봐야됨
+        // varchar(a) : a는 byte가 아닌 글자 길이
+        String title = "";
+        for (int i = 0; i < 99; i++) {
+            title += "가";
+        }
+        String requestBody = "title=" + title + "&content=내용1";
 
         // when
         ResultActions resultActions = mvc.perform(post("/board").content(requestBody)
