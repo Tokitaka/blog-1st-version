@@ -53,9 +53,7 @@ public class UserController {
         }
 
         int result = userService.회원가입(joinReqDto);
-        if (result != 1) {
-            throw new CustomException("회원가입 실패");
-        }
+
         return "redirect:/loginForm";
     }
 

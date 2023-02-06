@@ -18,7 +18,7 @@ public class UserService {
 
     @Transactional // 걸리면 동기화(동시접속)이 안된다고 생각해 -> 근데 사실은 'write' 동작만 lock 걸림(select no), 메서드 동기화
                    // synchronized 걸면 됨
-    public int 회원가입(JoinReqDto joinReqDto) {
+    public void 회원가입(JoinReqDto joinReqDto) {
         // username 중복체크 (더블체크) , 역할 분담 할 것
         User sameUser = userRepository.findByUsername(joinReqDto.getUsername());
         if (sameUser != null) {
@@ -26,7 +26,9 @@ public class UserService {
         }
         // insert -> Transaction 발동 -> lock
         int result = userRepository.insert(joinReqDto.getUsername(), joinReqDto.getPassword(), joinReqDto.getEmail());
-        return result;
+        if (result != 1) {
+            throw new CustomException("회원가입 실패");
+        }
     }
 
     @Transactional(readOnly = true) // transactional 를 걸면 내 작업이 끝나기 전까지는 외부에서 data가 변경이 되도 그 전의 데이터로 read, select도

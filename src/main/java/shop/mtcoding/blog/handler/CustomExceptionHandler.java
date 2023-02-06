@@ -17,7 +17,7 @@ public class CustomExceptionHandler {
     // CustomException 만 제어 하겠다
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> customException(CustomException e) {
-        return new ResponseEntity<>(Script.back(e.getMessage()), HttpStatus.BAD_REQUEST); //400
-        //file X, data 리턴할때만 씀 new ResponseEntity<>(body, http상태코드)
+        return new ResponseEntity<>(Script.back(e.getMessage()), e.getStatus()); // 400
+        // file X, data 리턴할때만 씀 new ResponseEntity<>(body, http상태코드)
     }
 }
