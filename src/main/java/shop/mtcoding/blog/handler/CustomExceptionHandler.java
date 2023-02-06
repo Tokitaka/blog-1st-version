@@ -1,5 +1,7 @@
 package shop.mtcoding.blog.handler;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,7 +16,8 @@ public class CustomExceptionHandler {
     // @ExceptionHandler(RuntimeException.class) -> 부모
     // CustomException 만 제어 하겠다
     @ExceptionHandler(CustomException.class)
-    public String customException(CustomException e) {
-        return Script.back(e.getMessage());
+    public ResponseEntity<?> customException(CustomException e) {
+        return new ResponseEntity<>(Script.back(e.getMessage()), HttpStatus.BAD_REQUEST); //400
+        //file X, data 리턴할때만 씀 new ResponseEntity<>(body, http상태코드)
     }
 }

@@ -6,23 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.user.UserReq.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReq.LoginReqDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
 import shop.mtcoding.blog.service.UserService;
-import shop.mtcoding.blog.util.Script;
 
 @Controller
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    HttpSession session;
+    private HttpSession session;
 
     @Autowired
     private UserService userService;
@@ -43,6 +42,7 @@ public class UserController {
     public String join(JoinReqDto joinReqDto) {
 
         if (joinReqDto.getUsername() == null || joinReqDto.getUsername().isEmpty()) {
+            // NullPointException잡아주기 가 선행되고 isEmpty(front의 입력 문제, "" 공백같은거)
             throw new CustomException("username을 작성해주세요");
         }
         if (joinReqDto.getPassword() == null || joinReqDto.getPassword().isEmpty()) {
@@ -51,6 +51,7 @@ public class UserController {
         if (joinReqDto.getEmail() == null || joinReqDto.getEmail().isEmpty()) {
             throw new CustomException("email을 작성해주세요");
         }
+
         int result = userService.회원가입(joinReqDto);
         if (result != 1) {
             throw new CustomException("회원가입 실패");
@@ -58,15 +59,21 @@ public class UserController {
         return "redirect:/loginForm";
     }
 
-    @ResponseBody
     @PostMapping("/login")
-    public String login(String username, String password) {
-        User principal = userRepository.findByUsernameAndPassword(username, password);
+    public String login(LoginReqDto loginReqDto) {
+        if (loginReqDto.getUsername() == null || loginReqDto.getUsername().isEmpty()) {
+            // NullPointException잡아주기 가 선행되고 isEmpty(front의 입력 문제, "" 공백같은거)
+            throw new CustomException("username을 작성해주세요");
+        }
+        if (loginReqDto.getPassword() == null || loginReqDto.getPassword().isEmpty()) {
+            throw new CustomException("password을 작성해주세요");
+        }
+        User principal = userService.로그인(loginReqDto);
         if (principal == null) {
-            return Script.back("로그인실패");
+            throw new CustomException("유저네임 혹은 패스워드가 잘못 입력되었습니다");
         }
         session.setAttribute("principal", principal);
-        return Script.href("/");
+        return "redirect:/";
     }
 
     @GetMapping("/user/updateForm")
